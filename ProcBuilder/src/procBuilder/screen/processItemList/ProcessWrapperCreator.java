@@ -20,7 +20,6 @@ import procBuilder.screen.scrollTable.mapValues.MapValuesTable;
  *
  */
 public class ProcessWrapperCreator extends JPanel {
-	//TODO - Write this screen 
 	
 	/*
 	 * Screen variables
@@ -74,7 +73,11 @@ public class ProcessWrapperCreator extends JPanel {
 	}
 	
 	private boolean valid() {
-		//TODO - Validation
+		if (getJTextFieldName().getText() == null
+				|| getJTextFieldName().getText().isEmpty()) {
+			return false;
+		}
+		
 		return true;
 	}
 	
@@ -110,8 +113,6 @@ public class ProcessWrapperCreator extends JPanel {
 	private JPanel getJPanelTextPanels() {
 		if (jPanelTextPanels == null) {
 			jPanelTextPanels = new JPanel();
-			
-			//TODO - Layout - Don't go 50/50
 			jPanelTextPanels.setLayout(new GridLayout(0, 2));
 			
 			jPanelTextPanels.add(getJLabelName());

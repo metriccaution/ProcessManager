@@ -2,6 +2,7 @@ package procBuilder.engine;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -16,6 +17,7 @@ public class ProcessWrapper {
 	
 	public ProcessWrapper() {
 		items = new ArrayList<String>();
+		env = new HashMap<String, String>();
 	}
 	
 	/*

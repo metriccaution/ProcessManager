@@ -18,6 +18,7 @@ import procBuilder.screen.ProcBuilderScreenConstants;
 
 public class ProcessItemList extends JPanel implements ProcBuilderScreenConstants {
 	private final static Logger LOGGER = Logger.getLogger(ProcessItemList.class.getName());
+	//LATER - Maybe make this a table with buttons instead
 	
 	/*
 	 * Screen components

@@ -21,6 +21,8 @@ public class ProcessWrapperRowWrapper extends ScrollTableRowWrapper {
 	@Override
 	public Object getData(String collumnName) {
 		switch (collumnName) {
+		case "Name" :
+			return source.getName();
 		case "Items":
 			return source.getItems();
 		case "Working Directory":

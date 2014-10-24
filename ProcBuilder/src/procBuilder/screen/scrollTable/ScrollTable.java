@@ -44,7 +44,7 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 		return scrollPane;
 	}
 
-	protected JTable getTable() {
+	public JTable getTable() {
 		if (table == null) {
 			table = new JTable(new ScrollTableModel<E>());
 		}
@@ -79,7 +79,7 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 	public List<E> getData() {
 		return getTableModel().getData();
 	}
-
+	
 	/**
 	 * The TableModel for a ScrollTable Holds an ArrayList of RowWrappers, basic implementation of TableModel stuff
 	 *

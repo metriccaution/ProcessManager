@@ -45,7 +45,6 @@ public class MapValuesTable extends ScrollTable<MapValueRowWrapper> {
 	}
 	
 	public void setMap(Map<String, String> values) {
-		//TODO - Set from map
 		for (String k : values.keySet()) {
 			MapValueRowWrapper row = new MapValueRowWrapper();
 			row.setKey(k);

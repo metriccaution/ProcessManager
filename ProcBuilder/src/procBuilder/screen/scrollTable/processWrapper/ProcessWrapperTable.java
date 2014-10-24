@@ -5,7 +5,7 @@ import procBuilder.screen.scrollTable.ScrollTable;
 
 public class ProcessWrapperTable extends ScrollTable<ProcessWrapperRowWrapper> {
 	
-	public final static String[] DEFAULT_COLUMN_NAMES = {"Items", "Working Directory"};
+	public final static String[] DEFAULT_COLUMN_NAMES = {"Name"};
 	
 	@Override
 	public String[] getColumnNames() {
