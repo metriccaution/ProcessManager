@@ -4,13 +4,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class ProcessWrapper {
 	private final static Logger LOGGER = Logger.getLogger(ProcessWrapper.class.getName());
 	
-	//TODO - Use the map etc when running
 	private String name;
 	private List<AbstractProcessItem> items;
 	private Map<String, String> env;
@@ -18,6 +16,17 @@ public class ProcessWrapper {
 	
 	public ProcessWrapper() {
 		items = new ArrayList<AbstractProcessItem>();
+	}
+	
+	/*
+	 * Methods to handle the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/*
@@ -47,6 +56,11 @@ public class ProcessWrapper {
 	}
 	
 	/*
+	 * Methods to handle the environment variables
+	 */
+	//TODO - Set/use the map
+	
+	/*
 	 * Method to create a processbuilder set up correctly
 	 */
 	public ProcessBuilder toProcessBuilder() {
@@ -70,7 +84,7 @@ public class ProcessWrapper {
 			pb.directory(workingDirectory.toFile());
 		}
 		
-		LOGGER.finest("ProcessBuilder created with commands " + items);
+		LOGGER.finest("ProcessBuilder created from " + name + " with commands " + items);
 		
 		return pb;
 	}

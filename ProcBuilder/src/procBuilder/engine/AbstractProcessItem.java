@@ -6,7 +6,7 @@ package procBuilder.engine;
  *
  */
 public abstract class AbstractProcessItem {
-	//TODO - Split out template items and static items
+	//LATER - Split out template items and static items
 	
 	public abstract String toString();
 }

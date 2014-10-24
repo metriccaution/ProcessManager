@@ -37,7 +37,7 @@ public class ProcessItemPanel extends JPanel implements ProcBuilderScreenConstan
 
 	public ProcessItemPanel(ProcessItemList parent) {
 		this.parent = parent;
-		//TODO - Size & alignment
+		//LATER - Size & alignment
 		BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
 		setLayout(layout);
 

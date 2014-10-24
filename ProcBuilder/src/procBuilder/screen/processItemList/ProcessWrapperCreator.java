@@ -1,9 +1,7 @@
 package procBuilder.screen.processItemList;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -16,8 +14,6 @@ import procBuilder.screen.scrollTable.mapValues.MapValuesTable;
  *
  */
 public class ProcessWrapperCreator extends JPanel {
-	private final static Logger LOGGER = Logger.getLogger(ProcessWrapperCreator.class.getName());
-
 	//TODO - Write this screen 
 	
 	/*
