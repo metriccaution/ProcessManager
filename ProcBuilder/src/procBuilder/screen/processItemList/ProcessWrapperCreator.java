@@ -2,10 +2,16 @@ package procBuilder.screen.processItemList;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import procBuilder.engine.ProcessWrapper;
 import procBuilder.screen.scrollTable.mapValues.MapValuesTable;
 
 /**
@@ -27,9 +33,10 @@ public class ProcessWrapperCreator extends JPanel {
 	 * Holds the list of commands and the map
 	 */
 	private JPanel jPanelCommandsAndMap;
-	
+	private JLabel jLabelName;
+	private JLabel jLabelWorkingDir;
 	private JTextField jTextFieldName;
-	private JTextField jTextFieldPath;
+	private JTextField jTextFieldWorkingDir;
 	private ProcessItemList list;
 	private MapValuesTable scrollTableMapValues;
 
@@ -37,6 +44,54 @@ public class ProcessWrapperCreator extends JPanel {
 		setLayout(new BorderLayout());
 		add(getJPanelTextPanels(), BorderLayout.PAGE_START);
 		add(getJPanelCommandsAndMap(), BorderLayout.CENTER);
+	}
+	
+	/**
+	 * Create a ProcessWrapper from the values on this panel
+	 * @return A ProcessWrapper from the values on the form, null if invalid
+	 */
+	public ProcessWrapper getWrapperFromValues() {
+		if (valid()) {
+			String name = getJTextFieldName().getText();
+			
+			String workingDirString = getJTextFieldWorkingDir().getText();
+			Path workingDir = Paths.get(workingDirString);
+			
+			List<String> items = getList().panelsToProcessItems();
+			
+			Map<String, String> env = getScrollTableMapValues().getMap();
+			
+			ProcessWrapper wrapper = new ProcessWrapper();
+			wrapper.setName(name);
+			wrapper.setWorkingDirectory(workingDir);
+			wrapper.setItems(items);
+			wrapper.setEnv(env);
+			
+			return wrapper;
+		}
+		
+		return null;
+	}
+	
+	private boolean valid() {
+		//TODO - Validation
+		return true;
+	}
+	
+	public void setFromProcessWrapper(ProcessWrapper wrapper) {
+		String name = wrapper.getName();
+		getJTextFieldName().setText(name);
+		
+		Path workingDir = wrapper.getWorkingDirectory();
+		if (workingDir != null) {
+			String workingDirString = workingDir.toString();
+			getJTextFieldWorkingDir().setText(workingDirString);
+		}
+		List<String> list = wrapper.getItems();
+		getList().processItemsToPanels(list);
+		
+		Map<String, String> env = wrapper.getEnv();
+		getScrollTableMapValues().setMap(env);
 	}
 	
 	private JPanel getJPanelCommandsAndMap() {
@@ -56,13 +111,32 @@ public class ProcessWrapperCreator extends JPanel {
 		if (jPanelTextPanels == null) {
 			jPanelTextPanels = new JPanel();
 			
-			jPanelTextPanels.setLayout(new GridLayout(0, 1));
+			//TODO - Layout - Don't go 50/50
+			jPanelTextPanels.setLayout(new GridLayout(0, 2));
 			
+			jPanelTextPanels.add(getJLabelName());
 			jPanelTextPanels.add(getJTextFieldName());
-			jPanelTextPanels.add(getJTextFieldPath());
+			jPanelTextPanels.add(getJLabelWorkingDir());
+			jPanelTextPanels.add(getJTextFieldWorkingDir());
 		}
 		
 		return jPanelTextPanels;
+	}
+	
+	private JLabel getJLabelName() {
+		if (jLabelName == null) {
+			jLabelName = new JLabel("Name");
+		}
+		
+		return jLabelName;
+	}
+	
+	private JLabel getJLabelWorkingDir() {
+		if (jLabelWorkingDir == null) {
+			jLabelWorkingDir = new JLabel("Working Directory");
+		}
+		
+		return jLabelWorkingDir;
 	}
 	
 	private JTextField getJTextFieldName() {
@@ -73,12 +147,12 @@ public class ProcessWrapperCreator extends JPanel {
 		return jTextFieldName;
 	}
 	
-	private JTextField getJTextFieldPath() {
-		if (jTextFieldPath == null) {
-			jTextFieldPath = new JTextField();
+	private JTextField getJTextFieldWorkingDir() {
+		if (jTextFieldWorkingDir == null) {
+			jTextFieldWorkingDir = new JTextField();
 		}
 		
-		return jTextFieldPath;
+		return jTextFieldWorkingDir;
 	}
 
 	private ProcessItemList getList() {

@@ -10,8 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import procBuilder.engine.AbstractProcessItem;
-import procBuilder.engine.StringProcessItem;
 import procBuilder.screen.ProcBuilderScreenConstants;
 
 /**
@@ -49,9 +47,12 @@ public class ProcessItemPanel extends JPanel implements ProcBuilderScreenConstan
 		getJPanelButtons().setVisible(editable);
 	}
 	
-	public AbstractProcessItem getValue() {
-		String text = getJTextFieldValue().getText();
-		return new StringProcessItem(text);
+	public String getValue() {
+		return getJTextFieldValue().getText();
+	}
+	
+	public void setValue(String value) {
+		getJTextFieldValue().setText(value);
 	}
 
 	/*

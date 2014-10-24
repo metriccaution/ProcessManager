@@ -14,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import procBuilder.engine.AbstractProcessItem;
 import procBuilder.screen.ProcBuilderScreenConstants;
 
 public class ProcessItemList extends JPanel implements ProcBuilderScreenConstants {
@@ -122,15 +121,24 @@ public class ProcessItemList extends JPanel implements ProcBuilderScreenConstant
 		resetListPanel();
 	}
 	
-	public List<AbstractProcessItem> panelsToProcessItems() {
-		ArrayList<AbstractProcessItem> items = new ArrayList<AbstractProcessItem>(panels.size());
+	public List<String> panelsToProcessItems() {
+		ArrayList<String> items = new ArrayList<String>(panels.size());
 		
 		for (ProcessItemPanel p : panels) {
-			AbstractProcessItem item = p.getValue();
-			items.add(item);
+			items.add(p.getValue());
 		}
 		
 		return items;
+	}
+	
+	public void processItemsToPanels(List<String> items) {
+		for (String item : items) {
+			ProcessItemPanel panel = new ProcessItemPanel(this);
+			panel.setValue(item);
+			panels.add(panel);
+		}
+		
+		resetListPanel();
 	}
 	
 	/**

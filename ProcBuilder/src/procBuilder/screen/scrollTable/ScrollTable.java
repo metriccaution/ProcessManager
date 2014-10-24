@@ -3,6 +3,7 @@ package procBuilder.screen.scrollTable;
 import java.awt.BorderLayout;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
@@ -74,6 +75,10 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 	public void addMouseListener(MouseListener ml) {
 		table.addMouseListener(ml);
 	}
+	
+	public List<E> getData() {
+		return getTableModel().getData();
+	}
 
 	/**
 	 * The TableModel for a ScrollTable Holds an ArrayList of RowWrappers, basic implementation of TableModel stuff
@@ -140,6 +145,14 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 		 */
 		public K getRowWrapper(int rowIndex) {
 			return data.get(rowIndex);
+		}
+		
+		/**
+		 * Get the data contained in the table
+		 * @return
+		 */
+		public List<K> getData() {
+			return data;
 		}
 	}
 }

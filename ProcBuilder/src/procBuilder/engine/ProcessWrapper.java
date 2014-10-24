@@ -10,12 +10,12 @@ public class ProcessWrapper {
 	private final static Logger LOGGER = Logger.getLogger(ProcessWrapper.class.getName());
 	
 	private String name;
-	private List<AbstractProcessItem> items;
+	private List<String> items;
 	private Map<String, String> env;
 	private Path workingDirectory;
 	
 	public ProcessWrapper() {
-		items = new ArrayList<AbstractProcessItem>();
+		items = new ArrayList<String>();
 	}
 	
 	/*
@@ -32,15 +32,15 @@ public class ProcessWrapper {
 	/*
 	 * Methods to handle commands
 	 */
-	public void addItem(AbstractProcessItem item) {
+	public void addItem(String item) {
 		items.add(item);
 	}
 	
-	public List<AbstractProcessItem> getItems() {
+	public List<String> getItems() {
 		return items;
 	}
 	
-	public void setItems(List<AbstractProcessItem> items) {
+	public void setItems(List<String> items) {
 		this.items = items;
 	}
 	
@@ -58,7 +58,13 @@ public class ProcessWrapper {
 	/*
 	 * Methods to handle the environment variables
 	 */
-	//TODO - Set/use the map
+	public Map<String, String> getEnv() {
+		return env;
+	}
+	
+	public void setEnv(Map<String, String> env) {
+		this.env = env;
+	}
 	
 	/*
 	 * Method to create a processbuilder set up correctly
@@ -66,9 +72,8 @@ public class ProcessWrapper {
 	public ProcessBuilder toProcessBuilder() {
 		//Convert the AbstractProcessItem objects to Strings to use as the command strings
 		List<String> commands = new ArrayList<String>();
-		for (AbstractProcessItem i : items) {
-			String command = i.toString();
-			commands.add(command);
+		for (String i : items) {
+			commands.add(i);
 		}
 		
 		ProcessBuilder pb = new ProcessBuilder(commands);
@@ -91,6 +96,6 @@ public class ProcessWrapper {
 	
 	@Override
 	public String toString() {
-		return name + ": " + items;
+		return name + ": " + items + env;
 	}
 }
