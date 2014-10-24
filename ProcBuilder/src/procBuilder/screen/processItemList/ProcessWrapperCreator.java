@@ -2,23 +2,19 @@ package procBuilder.screen.processItemList;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
+import java.awt.GridLayout;
 import java.util.logging.Logger;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import procBuilder.engine.AbstractProcessItem;
-import procBuilder.engine.ProcessEngine;
-import procBuilder.engine.ProcessWrapper;
-import procBuilder.screen.scrollTable.processWrapper.ProcessWrapperTable;
+import procBuilder.screen.scrollTable.mapValues.MapValuesTable;
 
+/**
+ * A screen containing a ProcessWrapper for creating one from scratch or editing one
+ * @author David
+ *
+ */
 public class ProcessWrapperCreator extends JPanel {
 	private final static Logger LOGGER = Logger.getLogger(ProcessWrapperCreator.class.getName());
 
@@ -27,82 +23,74 @@ public class ProcessWrapperCreator extends JPanel {
 	/*
 	 * Screen variables
 	 */
+	private JPanel jPanelCommandsAndMap;
+	private JPanel jPanelTextPanels;
+	private JTextField jTextFieldName;
+	private JTextField jTextFieldPath;
 	private ProcessItemList list;
-	private JButton jButtonRun;
-	private ProcessWrapperTable wrapperTable;
-
-	/*
-	 * Non-screen variables
-	 */
-	private ProcessEngine engine;
+	private MapValuesTable scrollTableMapValues;
 
 	public ProcessWrapperCreator() {
 		setLayout(new BorderLayout());
-
-		add(getJButtonRun(), BorderLayout.PAGE_START);
-		add(getList(), BorderLayout.LINE_END);
-		add(getWrapperTable(), BorderLayout.CENTER);
+		add(getJPanelTextPanels(), BorderLayout.PAGE_START);
+		add(getJPanelCommandsAndMap(), BorderLayout.CENTER);
 	}
-
-	public void setEngine(ProcessEngine engine) {
-		this.engine = engine;
+	
+	private JPanel getJPanelCommandsAndMap() {
+		if (jPanelCommandsAndMap == null) {
+			jPanelCommandsAndMap = new JPanel();
+			
+			jPanelCommandsAndMap.setLayout(new GridLayout(1, 0));
+			
+			jPanelCommandsAndMap.add(getList());
+			jPanelCommandsAndMap.add(getScrollTableMapValues());
+		}
+		
+		return jPanelCommandsAndMap;
+	}
+	
+	private JPanel getJPanelTextPanels() {
+		if (jPanelTextPanels == null) {
+			jPanelTextPanels = new JPanel();
+			
+			jPanelTextPanels.setLayout(new GridLayout(0, 1));
+			
+			jPanelTextPanels.add(getJTextFieldName());
+			jPanelTextPanels.add(getJTextFieldPath());
+		}
+		
+		return jPanelTextPanels;
+	}
+	
+	private JTextField getJTextFieldName() {
+		if (jTextFieldName == null) {
+			jTextFieldName = new JTextField();
+		}
+		
+		return jTextFieldName;
+	}
+	
+	private JTextField getJTextFieldPath() {
+		if (jTextFieldPath == null) {
+			jTextFieldPath = new JTextField();
+		}
+		
+		return jTextFieldPath;
 	}
 
 	private ProcessItemList getList() {
 		if (list == null) {
 			list = new ProcessItemList();
-			list.setPreferredSize(new Dimension(300,0));
 		}
 
 		return list;
 	}
-
-	private JButton getJButtonRun() {
-		if (jButtonRun == null) {
-			jButtonRun = new JButton("Run");
-
-			jButtonRun.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					List<AbstractProcessItem> items = getList().panelsToProcessItems();
-					LOGGER.finest("Made parameter set: " + items);
-
-					ProcessWrapper wrapper = new ProcessWrapper();
-					wrapper.setItems(items);
-					getWrapperTable().addProcessWrapper(wrapper);
-					validate();
-					repaint();
-				}
-			});
-		}
-
-		return jButtonRun;
-	}
 	
-	private ProcessWrapperTable getWrapperTable() {
-		if (wrapperTable == null){
-			wrapperTable = new ProcessWrapperTable();
-			wrapperTable.setPreferredSize(new Dimension(200,0));
-			wrapperTable.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					int rowIndex = wrapperTable.getTable().rowAtPoint(e.getPoint());
-					
-					if (rowIndex == -1) {
-						return;
-					}
-					
-					ProcessWrapper wrapper = wrapperTable.getRowWrapper(rowIndex).getSource();
-					try {
-						engine.runProcessWrapper(wrapper);
-					} catch (IOException e1) {
-						LOGGER.log(Level.SEVERE, "IOException running command", e1);
-					}
-				}
-			});
+	private MapValuesTable getScrollTableMapValues() {
+		if (scrollTableMapValues == null) {
+			scrollTableMapValues = new MapValuesTable();
 		}
 		
-		return wrapperTable;
+		return scrollTableMapValues;
 	}
 }

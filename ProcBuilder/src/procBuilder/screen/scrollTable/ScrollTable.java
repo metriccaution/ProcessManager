@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 
 public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPanel {
 	private final static Logger LOGGER = Logger.getLogger(ScrollTable.class.getName());
@@ -24,7 +25,7 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 	 * @return The collumn names
 	 */
 	public abstract String[] getColumnNames();
-
+	
 	/**
 	 * Create the panel.
 	 */
@@ -34,7 +35,7 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 		add(getScrollPane(getTable()), BorderLayout.CENTER);
 	}
 
-	public JScrollPane getScrollPane(JTable fileTable) {
+	private JScrollPane getScrollPane(JTable fileTable) {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane(fileTable);
 			fileTable.setFillsViewportHeight(true);
@@ -43,7 +44,7 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 		return scrollPane;
 	}
 
-	public JTable getTable() {
+	protected JTable getTable() {
 		if (table == null) {
 			table = new JTable(new ScrollTableModel<E>());
 		}
