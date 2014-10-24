@@ -13,7 +13,6 @@ class MapValueRowWrapper extends ScrollTableRowWrapper {
 
 	@Override
 	public Object getData(String collumnName) {
-		// TODO Auto-generated method stub
 		switch (collumnName){
 		case "Key":
 			return key;

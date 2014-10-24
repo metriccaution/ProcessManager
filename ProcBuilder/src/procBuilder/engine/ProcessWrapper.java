@@ -3,16 +3,18 @@ package procBuilder.engine;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class ProcessWrapper {
 	private final static Logger LOGGER = Logger.getLogger(ProcessWrapper.class.getName());
 	
-	//TODO - Give it a name too?
-	
-	private List<AbstractProcessItem> items = null;
-	//private Map<String, String> env = null; - Set the environment too
-	private Path workingDirectory = null;
+	//TODO - Use the map etc when running
+	private String name;
+	private List<AbstractProcessItem> items;
+	private Map<String, String> env;
+	private Path workingDirectory;
 	
 	public ProcessWrapper() {
 		items = new ArrayList<AbstractProcessItem>();
@@ -57,6 +59,12 @@ public class ProcessWrapper {
 		
 		ProcessBuilder pb = new ProcessBuilder(commands);
 		
+		//Set the environment variables
+		Map<String, String> pbEnv = pb.environment();
+		for (String key : env.keySet()) {
+			pbEnv.put(key, env.get(key));
+		}
+		
 		//Set the working directory if there is one set on the wrapper
 		if (workingDirectory != null) {
 			pb.directory(workingDirectory.toFile());
@@ -65,5 +73,10 @@ public class ProcessWrapper {
 		LOGGER.finest("ProcessBuilder created with commands " + items);
 		
 		return pb;
+	}
+	
+	@Override
+	public String toString() {
+		return name + ": " + items;
 	}
 }

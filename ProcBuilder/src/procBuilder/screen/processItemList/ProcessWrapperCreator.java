@@ -18,13 +18,20 @@ import procBuilder.screen.scrollTable.mapValues.MapValuesTable;
 public class ProcessWrapperCreator extends JPanel {
 	private final static Logger LOGGER = Logger.getLogger(ProcessWrapperCreator.class.getName());
 
-	//TODO - Dummy screen - remove
+	//TODO - Write this screen 
 	
 	/*
 	 * Screen variables
 	 */
-	private JPanel jPanelCommandsAndMap;
+	/**
+	 * Holds the everything that's not the commands and map - ProcessWrapper name and working directory
+	 */
 	private JPanel jPanelTextPanels;
+	/**
+	 * Holds the list of commands and the map
+	 */
+	private JPanel jPanelCommandsAndMap;
+	
 	private JTextField jTextFieldName;
 	private JTextField jTextFieldPath;
 	private ProcessItemList list;

@@ -6,6 +6,8 @@ import procBuilder.screen.scrollTable.ScrollTable;
 
 public class MapValuesTable extends ScrollTable<MapValueRowWrapper> {
 
+	//TODO - Make this editable / get key-value pairs out
+	
 	public final static String[] COLUMN_NAMES = {"Key", "Value"};
 	
 	public MapValuesTable() {
