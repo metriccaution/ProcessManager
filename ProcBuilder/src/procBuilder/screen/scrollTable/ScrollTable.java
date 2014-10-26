@@ -22,7 +22,7 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 
 	/**
 	 * Get the column names for this table, in order of appearance
-	 * @return The collumn names
+	 * @return The column names
 	 */
 	public abstract String[] getColumnNames();
 	
