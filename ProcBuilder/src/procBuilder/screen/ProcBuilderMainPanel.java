@@ -61,7 +61,6 @@ public class ProcBuilderMainPanel extends JPanel{
 	}
 	
 	private void initPersistance() {
-		//TODO - Ensure file exists
 		//Load the list of ProcessWrappers from file
 		String pathString = FILE_LOCATION;
 		wrapperPersistance = new ProcessPersistence(pathString);
@@ -137,7 +136,7 @@ public class ProcBuilderMainPanel extends JPanel{
 					}
 				}
 			};
-			processWrapperTable.addMouseListener(ml);
+			processWrapperTable.addTableMouseListener(ml);
 		}
 		
 		return processWrapperCreator;

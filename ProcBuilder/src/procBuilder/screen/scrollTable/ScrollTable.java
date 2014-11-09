@@ -72,7 +72,7 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 		return model.getRowWrapper(rowIndex);
 	}
 
-	public void addMouseListener(MouseListener ml) {
+	public void addTableMouseListener(MouseListener ml) {
 		table.addMouseListener(ml);
 	}
 	

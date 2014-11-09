@@ -76,7 +76,9 @@ public class ProcessWrapper implements Serializable{
 	 * Method to create a processbuilder set up correctly
 	 */
 	public ProcessBuilder toProcessBuilder() {
-		//TODO - Validation - Path etc
+		if (!valid()) {
+			return null;
+		}
 
 		//Convert the AbstractProcessItem objects to Strings to use as the command strings
 		List<String> commands = new ArrayList<String>();
@@ -97,14 +99,26 @@ public class ProcessWrapper implements Serializable{
 			pb.directory(workingDirectory.toFile());
 		}
 
-		LOGGER.finest("ProcessBuilder created from " + name + " with commands " + items);
+		LOGGER.finest("ProcessBuilder created: " + toString());
 
 		return pb;
+	}
+	
+	public boolean valid() {
+		if (name.isEmpty()) {
+			return false;
+		}
+		
+		if (items.size() == 0) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		return name + ": " + items + env;
+		return name + ": " + items + env + " in " + workingDirectory;
 	}
 
 	/*
