@@ -23,24 +23,50 @@ import procBuilder.engine.ProcessWrapper;
  */
 public class ProcessPersistence {
 	private final static Logger LOGGER = Logger.getLogger(ProcessPersistence.class.getName());
+
+	private final static Path DEFAULT_FILE_LOCATION = Paths.get(System.getProperty("user.home") + "\\ProcManager\\");
 	public final static String PROCESSES_FILE_NAME = "Procs.ser";
 	
-	private String saveLocation;
+	/*
+	 * Paths
+	 */
+	private Path persistenceDir, processWrappersPath;
 
 	/**
-	 * Create a class for persisting ProcessWrappers.
-	 * @param saveLocation The folder that the preferences are saved to.
+	 * Create a class for persisting ProcessWrappers. Called from factory methods
+	 * @param saveLocation The directory that the preferences are saved to.
+	 * @throws IOException When there is an error creating the directories
 	 */
-	public ProcessPersistence(String saveLocation) {
-		this.saveLocation = saveLocation + PROCESSES_FILE_NAME;
+	private ProcessPersistence(Path persistenceDir) throws IOException {
+		this.persistenceDir = persistenceDir;
+		if (!Files.exists(persistenceDir, LinkOption.NOFOLLOW_LINKS)) {
+			Files.createDirectory(persistenceDir);
+		}
+		
+		//Initialise the persisted wrappers location
+		processWrappersPath = persistenceDir.resolve(PROCESSES_FILE_NAME);
+		//Ensure there is a file for persisted wrappers
+		if (!Files.exists(processWrappersPath, LinkOption.NOFOLLOW_LINKS)) {
+			Files.createFile(processWrappersPath);
+			persistProcessWrapperList(new ArrayList<ProcessWrapper>());
+		}
 	}
-
+	
 	/**
-	 * Get the location that this w
-	 * @return
+	 * Factory a persistence object from default values
+	 * @return The persistence object, null if there is an error
 	 */
-	public String getSaveLocation() {
-		return saveLocation;
+	public static ProcessPersistence factoryDefaultProcessPersistence() {
+		ProcessPersistence retVal;
+		try {
+			retVal = new ProcessPersistence(DEFAULT_FILE_LOCATION);
+		}
+		catch (IOException ioe) {
+			LOGGER.log(Level.WARNING, "Error creating process persistence", ioe);
+			retVal = null;
+		}
+		
+		return retVal;
 	}
 
 	/**
@@ -50,10 +76,16 @@ public class ProcessPersistence {
 	 */
 	public void persistProcessWrapperList(List<ProcessWrapper> wrappers) throws IOException {
 		LOGGER.finest("Persisting process wrappers to file.");
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(saveLocation.toString()))){
-			oos.writeObject(wrappers);
+		
+		if (Files.exists(processWrappersPath, LinkOption.NOFOLLOW_LINKS)) {
+			try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(processWrappersPath.toString()))){
+				oos.writeObject(wrappers);
+			}
+			LOGGER.finest(wrappers.size() + " wrappers persisted.");
 		}
-		LOGGER.finest(wrappers.size() + " wrappers persisted.");
+		else {
+			LOGGER.warning("No persistence file found in " + persistenceDir + ", no wrappers persisted");
+		}
 	}
 
 	/**
@@ -64,10 +96,9 @@ public class ProcessPersistence {
 	public List<ProcessWrapper> retrieveProcessWrapperList() {
 		//LATER - Validate file names on retrieve?
 		LOGGER.finest("Retrieving process wrappers from file.");
-		Path filePath = Paths.get(saveLocation);
-		if (Files.exists(filePath, LinkOption.NOFOLLOW_LINKS)) {
+		if (Files.exists(processWrappersPath, LinkOption.NOFOLLOW_LINKS)) {
 			List<ProcessWrapper> persistedWrappers = new ArrayList<ProcessWrapper>();
-	        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveLocation.toString()))) {
+	        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(processWrappersPath.toString()))) {
 	        	persistedWrappers = (List<ProcessWrapper>)in.readObject();
 	        } catch (IOException | ClassNotFoundException e) {
 				LOGGER.log(Level.WARNING, "Error deserialising object", e);
@@ -77,8 +108,12 @@ public class ProcessPersistence {
 	        return persistedWrappers;	
 		}
 		else {
-			LOGGER.fine("No process list found at " + saveLocation);
+			LOGGER.fine("No process list found at " + processWrappersPath);
 			return new ArrayList<ProcessWrapper>();
 		}
+	}
+	
+	public Path getPersistenceDir() {
+		return persistenceDir;
 	}
 }
