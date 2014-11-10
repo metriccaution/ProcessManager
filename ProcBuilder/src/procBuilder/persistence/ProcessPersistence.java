@@ -94,7 +94,6 @@ public class ProcessPersistence {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ProcessWrapper> retrieveProcessWrapperList() {
-		//LATER - Validate file names on retrieve?
 		LOGGER.finest("Retrieving process wrappers from file.");
 		if (Files.exists(processWrappersPath, LinkOption.NOFOLLOW_LINKS)) {
 			List<ProcessWrapper> persistedWrappers = new ArrayList<ProcessWrapper>();

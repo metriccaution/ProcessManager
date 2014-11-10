@@ -105,6 +105,7 @@ public class ProcessWrapper implements Serializable{
 	}
 	
 	public boolean valid() {
+		//TODO - Valid check - No empty commands
 		if (name.isEmpty()) {
 			return false;
 		}
