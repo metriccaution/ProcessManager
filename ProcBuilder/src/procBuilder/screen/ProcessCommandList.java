@@ -2,7 +2,6 @@ package procBuilder.screen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +10,7 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,58 +18,126 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+/**
+ * A panel for configuring a list of String values
+ * @author David
+ *
+ */
 public class ProcessCommandList extends JPanel implements ScreenStatics{
-
+	private final static Logger LOGGER = Logger.getLogger(ProcessCommandList.class.getName());
+	
+	/*
+	 * Screen variables
+	 */
 	private JPanel jPanelButtons, jPanelList;
 	private JButton jButtonAdd, jButtonDelete, jButtonUp, jButtonDown;
 	private JScrollPane jScrollPaneList;
 
+	/*
+	 * List of text values
+	 */
 	private List<JTextField> values;
+	/*
+	 * Currently selected text field
+	 */
 	private JTextField currentField;
 
 	public ProcessCommandList() {
 		values = new ArrayList<JTextField>();
-		for (int i=0; i<1; i++) {
-			values.add(makeTextField("Hello world"));
-		}
+		values.add(makeTextField(""));
 		currentField = values.get(0);
 
 		setLayout(new BorderLayout());
-		add(getJPanelButtons(), BorderLayout.PAGE_START);
 		add(getJScrollPaneList(), BorderLayout.CENTER);
+		add(getJPanelButtons(), BorderLayout.PAGE_START);
 		updateList();
 	}
+	
+	/*
+	 * Interface methods - Strings in and out
+	 */
+	/**
+	 * Set the list of {@link JTextField}s from a list of strings
+	 * @param strings String values
+	 */
+	public void setFromStrings(List<String> strings) {
+		currentField = null;
+		values.clear();
+		for (int i=0; i<strings.size(); i++) {
+			values.add(makeTextField(strings.get(i)));
+		}
+		
+		if (values.size() > 0) {
+			currentField = values.get(0);
+		}
+		
+		updateList();
+	}
+	
+	/**
+	 * Retrieve the list of String values
+	 * @return
+	 */
+	public List<String> getStringValues() {
+		List<String> retVal = new ArrayList<String>();
+		for (int i=0; i<values.size(); i++) {
+			JTextField field = values.get(i);
+			String value = field.getText();
+			retVal.add(value);
+		}
+		
+		return retVal;
+	}
+	
+	public void setReadOnly(boolean readOnly) {
+		getJPanelButtons().setVisible(!readOnly);
+		for (JTextField value : values) {
+			value.setEditable(!readOnly);
+		}
+	}
 
+	/*
+	 * Helper methods
+	 */
+	/**
+	 * Get the correct colour for a {@link JTextField} in the list
+	 * @param field
+	 * @return
+	 */
+	private Color getColor(JTextField field) {
+		if (currentField != null
+			&& currentField.equals(field)) {
+			return FOCUS_COLOUR;
+		}
+		
+		int index = values.indexOf(field);
+		if (index % 2 == 0) {
+			return PRIMARY_COLOUR;
+		}
+		else {
+			return SECONDARY_COLOUR;
+		}
+	}
+	
+	private void recolourList() {
+		for (JTextField value : values) {
+			Color textFieldColour = getColor(value);
+			value.setBackground(textFieldColour);
+		}
+	}
+	
 	/**
 	 * Rebuild the {@link JPanel} of {@link JTextField}s - Remove all of them from the form and then add them again
 	 * Colours them correctly
 	 */
 	private void updateList() {
+		LOGGER.finest("Rebuilding ProcessCommandList");
 		getJPanelList().removeAll();
 
-		Color currentColor = PRIMARY_COLOUR;
 		for (JTextField value : values) {
 			getJPanelList().add(value);
-
-			if (value.equals(currentField)) {
-				value.setBackground(FOCUS_COLOUR);
-			}
-			else {
-				value.setBackground(currentColor);
-			}
-
-			if (currentColor.equals(PRIMARY_COLOUR)) {
-				currentColor = SECONDARY_COLOUR;
-			}
-			else {
-				currentColor = PRIMARY_COLOUR;
-			}
-		}
-
-		//TODO - Stop focus dancing
-
-		if (!currentField.hasFocus()) {
-			currentField.requestFocus();
+			Color textFieldColour = getColor(value);
+			value.setBackground(textFieldColour);
 		}
 
 		getJPanelList().revalidate();
@@ -83,7 +151,7 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 	 */
 	private JTextField makeTextField(String value) {
 		final JTextField retVal = new JTextField(value);
-		retVal.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+		retVal.setMaximumSize(TEXT_MAX);
 		retVal.addFocusListener(new FocusListener() {
 
 			@Override
@@ -101,14 +169,14 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 
 	private void setCurrentTextField(JTextField field) {
 		currentField = field;
-		updateList();
+		recolourList();
 	}
 
 	private void delete(JTextField field) {
 		values.remove(field);
 		updateList();
 	}
-
+	
 	/*
 	 * Screen gets/sets
 	 */
@@ -130,6 +198,7 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 	private JScrollPane getJScrollPaneList() {
 		if (jScrollPaneList == null) {
 			jScrollPaneList = new JScrollPane(getJPanelList());
+			//LATER - Set the scroll properties to be sensible
 		}
 
 		return jScrollPaneList;
@@ -138,7 +207,7 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 	private JPanel getJPanelList() {
 		if (jPanelList == null) {
 			jPanelList = new JPanel();
-
+			jPanelList.setBackground(COMPONENT_BACKGROUND_COLOUR);
 			jPanelList.setLayout(new BoxLayout(jPanelList, BoxLayout.Y_AXIS));
 		}
 
@@ -153,8 +222,12 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					values.add(makeTextField(""));
+					JTextField newTextField = makeTextField("");
+					values.add(newTextField);
 					updateList();
+					if (currentField == null) {
+						setCurrentTextField(newTextField);
+					}
 				}
 			});
 		}
@@ -171,14 +244,14 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					//Make a noise if trying to delete when they can't
-					if (values.size() < 2) {
+					if (currentField == null
+						|| values.size() < 2) {
 						Toolkit.getDefaultToolkit().beep();
 						return;
 					}
 					
 					int index = values.indexOf(currentField);
 					delete(currentField);
-					System.out.println(index);
 					//Delete one that isn't last
 					if (index < values.size()) {
 						setCurrentTextField(values.get(index));
@@ -201,6 +274,11 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					if (currentField == null) {
+						Toolkit.getDefaultToolkit().beep();
+						return;
+					}
+					
 					int index = values.indexOf(currentField);
 					if (index == 0) {
 						Toolkit.getDefaultToolkit().beep();
@@ -209,6 +287,7 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 					
 					Collections.swap(values, index, index - 1);
 					updateList();
+					currentField.requestFocus();
 				}
 			});
 		}
@@ -224,6 +303,11 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					if (currentField == null) {
+						Toolkit.getDefaultToolkit().beep();
+						return;
+					}
+					
 					int index = values.indexOf(currentField);
 					if (index == values.size() - 1) {
 						Toolkit.getDefaultToolkit().beep();
@@ -232,6 +316,7 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 					
 					Collections.swap(values, index, index + 1);
 					updateList();
+					currentField.requestFocus();
 				}
 			});
 		}

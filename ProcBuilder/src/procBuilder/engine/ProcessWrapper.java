@@ -60,6 +60,11 @@ public class ProcessWrapper implements Serializable{
 	public void setWorkingDirectory(Path workingDirectory) {
 		this.workingDirectory = workingDirectory;
 	}
+	
+	public void setWorkingDirectoryFromString(String s) {
+		Path p = Paths.get(s);
+		setWorkingDirectory(p);
+	}
 
 	/*
 	 * Methods to handle the environment variables
@@ -105,14 +110,25 @@ public class ProcessWrapper implements Serializable{
 	}
 	
 	public boolean valid() {
-		//TODO - Valid check - No empty commands
+		//Check there is a name
 		if (name.isEmpty()) {
 			return false;
 		}
 		
+		//Check we are actually running commands
 		if (items.size() == 0) {
 			return false;
 		}
+		
+		//Check that none of the commands are blank
+		for (int i=0; i<items.size(); i++) {
+			String s = items.get(i);
+			if (s.isEmpty()) {
+				return false;
+			}
+		}
+		
+		//LATER - Check map too
 		
 		return true;
 	}

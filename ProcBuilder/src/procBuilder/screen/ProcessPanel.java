@@ -2,10 +2,15 @@ package procBuilder.screen;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import procBuilder.engine.ProcessWrapper;
 
 /**
  * A panel for creating or viewing a ProcessWrapper
@@ -13,26 +18,63 @@ import javax.swing.JTextField;
  *
  */
 public class ProcessPanel extends JPanel implements ScreenStatics{
-
-	//TODO - Write ProcessPanel
-	/*
-	 * Add tables - Editable - For map and for values
-	 */
-	
 	private JLabel jLabelName, jLabelPath;
 	private JTextField jTextFieldName, jTextFieldPath;
-	private JPanel jPanelTextFields;
+	private JPanel jPanelTextFields, jPanelListAndMap;
+	private ProcessCommandList commandList;
+	private ProcessMapValues mapValues;
 	
 	/**
 	 * Create the panel.
 	 */
 	public ProcessPanel() {
-		setLayout(new GridLayout(0, 2));
 		setLayout(new BorderLayout());
 		setBackground(BACKGROUND_COLOUR);
 		add(getJPanelTextFields(), BorderLayout.PAGE_START);
+		add(getJPanelListAndMap(), BorderLayout.CENTER);
+	}
+	
+	/*
+	 * Interface methods
+	 */
+	public ProcessWrapper getProcessWrapper() {
+		ProcessWrapper wrapper = new ProcessWrapper();
 		
-		add(new ProcessCommandList(), BorderLayout.CENTER);
+		String name = getJTextFieldName().getText();
+		wrapper.setName(name);
+		
+		String workingDir = getJTextFieldPath().getText();
+		wrapper.setWorkingDirectoryFromString(workingDir);
+		
+		List<String> commands = getCommandList().getStringValues();
+		wrapper.setItems(commands);
+		
+		Map<String, String> env = getMapValues().getMap();
+		wrapper.setEnv(env);
+		
+		return wrapper;
+	}
+	
+	public void setFromProcessWrapper(ProcessWrapper wrapper) {
+		String name = wrapper.getName();
+		getJTextFieldName().setText(name);
+		
+		Path workingDir = wrapper.getWorkingDirectory();
+		String workingDirString = workingDir.toString();
+		getJTextFieldPath().setText(workingDirString);
+		
+		List<String> commands = wrapper.getItems();
+		getCommandList().setFromStrings(commands);
+		
+		Map<String, String> env = wrapper.getEnv();
+		getMapValues().setMap(env);
+	}
+	
+	public void setReadOnly(boolean readOnly) {
+		getJTextFieldName().setEnabled(!readOnly);
+		getJTextFieldPath().setEnabled(!readOnly);
+		getCommandList().setReadOnly(readOnly);
+		getMapValues().setReadOnly(readOnly);
 	}
 
 	/*
@@ -50,6 +92,18 @@ public class ProcessPanel extends JPanel implements ScreenStatics{
 		}
 		
 		return jPanelTextFields;
+	}
+	
+	private JPanel getJPanelListAndMap() {
+		if (jPanelListAndMap == null) {
+			jPanelListAndMap = new JPanel();
+			jPanelListAndMap.setLayout(new GridLayout(1, 0));
+			
+			jPanelListAndMap.add(getCommandList());
+			jPanelListAndMap.add(getMapValues());
+		}
+		
+		return jPanelListAndMap;
 	}
 	
 	private JLabel getJLabelName() {
@@ -82,5 +136,21 @@ public class ProcessPanel extends JPanel implements ScreenStatics{
 		}
 		
 		return jTextFieldPath;
+	}
+	
+	private ProcessCommandList getCommandList() {
+		if (commandList == null) {
+			commandList = new ProcessCommandList();
+		}
+		
+		return commandList;
+	}
+	
+	private ProcessMapValues getMapValues() {
+		if (mapValues == null) {
+			mapValues = new ProcessMapValues();
+		}
+		
+		return mapValues;
 	}
 }

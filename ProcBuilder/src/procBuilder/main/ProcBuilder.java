@@ -4,11 +4,14 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import procBuilder.screen.ProcBuilderFrame;
+
 public class ProcBuilder {
 	private final static Logger LOGGER = Logger.getLogger("procBuilder");
 
 	public static void main(String[] args) {
 		initLogger();
+		new ProcBuilderFrame();
 	}
 
 	private static void initLogger() {
