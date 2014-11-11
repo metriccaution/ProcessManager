@@ -1,4 +1,4 @@
-package procBuilder.screen;
+package procBuilder.screen.processPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,7 +10,6 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,14 +17,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import procBuilder.screen.ScreenStatics;
+
 /**
  * A panel for configuring a list of String values
  * @author David
  *
  */
 public class ProcessCommandList extends JPanel implements ScreenStatics{
-	private final static Logger LOGGER = Logger.getLogger(ProcessCommandList.class.getName());
-	
 	/*
 	 * Screen variables
 	 */
@@ -131,7 +130,6 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 	 * Colours them correctly
 	 */
 	private void updateList() {
-		LOGGER.finest("Rebuilding ProcessCommandList");
 		getJPanelList().removeAll();
 
 		for (JTextField value : values) {

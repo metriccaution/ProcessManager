@@ -1,4 +1,4 @@
-package procBuilder.screen;
+package procBuilder.screen.processPanel;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import procBuilder.engine.ProcessWrapper;
+import procBuilder.screen.ScreenStatics;
 
 /**
  * A panel for creating or viewing a ProcessWrapper

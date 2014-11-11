@@ -1,4 +1,4 @@
-package procBuilder.screen;
+package procBuilder.screen.processPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,6 +18,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+
+import procBuilder.screen.ScreenStatics;
 
 public class ProcessMapValues extends JPanel implements ScreenStatics{
 	private JPanel jPanelButtons, jPanelList;

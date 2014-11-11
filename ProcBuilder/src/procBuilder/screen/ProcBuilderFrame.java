@@ -2,6 +2,8 @@ package procBuilder.screen;
 
 import javax.swing.JFrame;
 
+import procBuilder.screen.mainPanel.MainPanel;
+
 public class ProcBuilderFrame extends JFrame {
 
 	/**
@@ -11,7 +13,7 @@ public class ProcBuilderFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 500, 300);
 		setTitle("Process Builder");	
-		setContentPane(new ProcessPanel());
+		setContentPane(new MainPanel());
 		setVisible(true);
 	}
 
