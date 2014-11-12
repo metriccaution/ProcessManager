@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class ProcessWrapper implements Serializable{
@@ -128,7 +129,14 @@ public class ProcessWrapper implements Serializable{
 			}
 		}
 		
-		//LATER - Check map too
+		//Check that none of the environment variables are empty
+		Set<String> keySet = env.keySet();
+		for (String s : keySet) {
+			if (s.isEmpty()
+				|| env.get(s).isEmpty()) {
+				return false;
+			}
+		}
 		
 		return true;
 	}

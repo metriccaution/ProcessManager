@@ -196,7 +196,7 @@ public class ProcessCommandList extends JPanel implements ScreenStatics{
 	private JScrollPane getJScrollPaneList() {
 		if (jScrollPaneList == null) {
 			jScrollPaneList = new JScrollPane(getJPanelList());
-			//LATER - Set the scroll properties to be sensible
+			jScrollPaneList.getVerticalScrollBar().setUnitIncrement((int)BUTTON_MAX.getHeight());
 		}
 
 		return jScrollPaneList;
