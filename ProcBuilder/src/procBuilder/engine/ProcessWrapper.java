@@ -145,7 +145,11 @@ public class ProcessWrapper implements Serializable{
 		out.writeObject(name);
 		out.writeObject(items);
 		out.writeObject(env);
-		out.writeObject(workingDirectory.toString());
+		String path = workingDirectory.toString();
+		if (path == null) {
+			path = "";
+		}
+		out.writeObject(path);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -153,6 +157,12 @@ public class ProcessWrapper implements Serializable{
 		name = (String)in.readObject();
 		items = (List<String>)in.readObject();
 		env = (Map<String, String>)in.readObject();
-		workingDirectory = Paths.get((String)in.readObject());
+		String pathString = (String)in.readObject();
+		if (pathString.equals("")) {
+			workingDirectory = null;
+		}
+		else {
+			workingDirectory = Paths.get(pathString);
+		}
 	}
 }
