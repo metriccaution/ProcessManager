@@ -80,6 +80,10 @@ public abstract class ScrollTable<E extends ScrollTableRowWrapper> extends JPane
 		return getTableModel().getData();
 	}
 	
+	public void removeRow(E rowWrapper) {
+		getData().remove(rowWrapper);
+	}
+	
 	/**
 	 * The TableModel for a ScrollTable Holds an ArrayList of RowWrappers, basic implementation of TableModel stuff
 	 *

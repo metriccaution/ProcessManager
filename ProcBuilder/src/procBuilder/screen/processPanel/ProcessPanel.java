@@ -45,7 +45,9 @@ public class ProcessPanel extends JPanel implements ScreenStatics{
 		wrapper.setName(name);
 		
 		String workingDir = getJTextFieldPath().getText();
-		wrapper.setWorkingDirectoryFromString(workingDir);
+		if (!workingDir.isEmpty()) {
+			wrapper.setWorkingDirectoryFromString(workingDir);
+		}
 		
 		List<String> commands = getCommandList().getStringValues();
 		wrapper.setItems(commands);
@@ -61,8 +63,13 @@ public class ProcessPanel extends JPanel implements ScreenStatics{
 		getJTextFieldName().setText(name);
 		
 		Path workingDir = wrapper.getWorkingDirectory();
-		String workingDirString = workingDir.toString();
-		getJTextFieldPath().setText(workingDirString);
+		if (workingDir != null) {
+			String workingDirString = workingDir.toString();
+			getJTextFieldPath().setText(workingDirString);
+		}
+		else {
+			getJTextFieldPath().setText("");
+		}
 		
 		List<String> commands = wrapper.getItems();
 		getCommandList().setFromStrings(commands);
