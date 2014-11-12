@@ -3,8 +3,6 @@ package procBuilder.screen.mainPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-<<<<<<< HEAD
-=======
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,17 +10,13 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
->>>>>>> branch 'master' of https://github.com/metriccaution/ProcessManager
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-<<<<<<< HEAD
-=======
 import procBuilder.engine.ProcessWrapper;
 import procBuilder.persistence.ProcessPersistence;
->>>>>>> branch 'master' of https://github.com/metriccaution/ProcessManager
 import procBuilder.screen.ScreenStatics;
 import procBuilder.screen.processPanel.ProcessPanel;
 import procBuilder.screen.scrollTable.wrapperTable.ProcessWrapperWrapper;
