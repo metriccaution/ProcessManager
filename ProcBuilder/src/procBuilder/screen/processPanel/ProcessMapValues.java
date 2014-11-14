@@ -71,6 +71,7 @@ public class ProcessMapValues extends JPanel implements ScreenStatics{
 	}
 
 	public void setReadOnly(boolean readOnly) {
+		jPanelButtons.setVisible(!readOnly);
 		for (KeyValuePair keyValue : keyValues) {
 			keyValue.setReadOnly(readOnly);
 		}

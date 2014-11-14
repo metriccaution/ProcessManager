@@ -15,7 +15,6 @@ public class ProcBuilder {
 	}
 
 	private static void initLogger() {
-		//LATER - Config - Log to file instead
 		Level logLevel = Level.ALL;
 		LOGGER.setUseParentHandlers(false);
 		LOGGER.setLevel(logLevel);

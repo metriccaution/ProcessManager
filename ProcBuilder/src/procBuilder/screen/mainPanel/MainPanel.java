@@ -8,13 +8,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
+import procBuilder.engine.ProcessGenerator;
 import procBuilder.engine.ProcessWrapper;
 import procBuilder.persistence.ProcessPersistence;
 import procBuilder.screen.ScreenStatics;
@@ -24,8 +29,9 @@ import procBuilder.screen.scrollTable.wrapperTable.WrapperTable;
 
 public class MainPanel extends JPanel implements ScreenStatics {
 	private ProcessPanel processPanel;
-	private JPanel jPanelButtons;
-	private JButton jButtonRun, jButtonReadOnly, jButtonNewProcess, jButtonDelete, jButtonSave;
+	private JPanel jPanelButtons, jPanelFactory;
+	private JButton jButtonRun, jButtonReadOnly, jButtonNewProcess, jButtonDelete, jButtonSave, jButtonFactory;
+	private JTextField jTextFieldFactoryDir;
 	private WrapperTable wrapperTable;
 	private ProcessPersistence persistence;
 	
@@ -79,8 +85,13 @@ public class MainPanel extends JPanel implements ScreenStatics {
 	private void newProcessWrapper() {
 		ProcessWrapper pw = new ProcessWrapper();
 		pw.setName("New Process");
+		List<String> commands = new ArrayList<String>();
+		commands.add("");
+		pw.setItems(commands);
 		getProcessPanel().setFromProcessWrapper(pw);
 		getWrapperTable().addProcess(pw);
+		int index = getWrapperTable().getData().size() - 1;
+		getWrapperTable().getTable().setRowSelectionInterval(index, index);
 		updateTable();
 	}
 	
@@ -158,9 +169,60 @@ public class MainPanel extends JPanel implements ScreenStatics {
 			jPanelButtons.add(getJButtonNewProcess());
 			jPanelButtons.add(getJButtonDelete());
 			jPanelButtons.add(getJButtonSave());
+			jPanelButtons.add(getJPanelFactory());
 		}
 		
 		return jPanelButtons;
+	}
+	
+	private JPanel getJPanelFactory() {
+		if (jPanelFactory == null) {
+			jPanelFactory = new JPanel();
+			jPanelFactory.setLayout(new FlowLayout(FlowLayout.LEADING));
+			jPanelFactory.add(getJButtonFactory());
+			jPanelFactory.add(getJTextFieldFactoryDir());
+		}
+		
+		return jPanelFactory;
+	}
+	
+	private JButton getJButtonFactory() {
+		if (jButtonFactory == null) {
+			jButtonFactory = new JButton("Factory");
+			jButtonFactory.setMaximumSize(BUTTON_MAX);
+			jButtonFactory.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					List<String> commands = new ArrayList<String>();
+					commands.add("cmd");
+					commands.add("/c");
+					commands.add("start");
+					
+					Map<String, String> env = new HashMap<String, String>();
+					String extension = ".exe";
+					try {
+						List<ProcessWrapper> newList = ProcessGenerator.generateProcesses(Paths.get(getJTextFieldFactoryDir().getText()), commands, env, extension);
+						addProcessWrappers(newList);
+						updateTable();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
+		}
+		
+		return jButtonFactory;
+	}
+	
+	private JTextField getJTextFieldFactoryDir() {
+		if (jTextFieldFactoryDir == null) {
+			jTextFieldFactoryDir = new JTextField();
+			jTextFieldFactoryDir.setMaximumSize(TEXT_MAX);
+			jTextFieldFactoryDir.setPreferredSize(new Dimension(200, 20));
+		}
+		
+		return jTextFieldFactoryDir;
 	}
 	
 	private JButton getJButtonRun() {
